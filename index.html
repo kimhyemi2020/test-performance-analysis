@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 외부 서버와의 통신을 브라우저 차원에서 차단한다 (connect-src 'none'). -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self' file:; style-src 'self' file:; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+  <title>수행평가 분석 대시보드</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <h1>수행평가 분석 대시보드</h1>
+        <p class="sub">CSV 파일을 올리면 점수 통계와 분포를 바로 확인할 수 있습니다.</p>
+      </div>
+    </div>
+    <span class="privacy-badge" title="파일은 이 컴퓨터의 브라우저 안에서만 읽고 계산합니다.">
+      브라우저 내 분석 · 서버 전송 없음
+    </span>
+  </header>
+
+  <main>
+    <section class="card upload" id="dropzone">
+      <div class="upload-text">
+        <h2>CSV 파일 업로드</h2>
+        <p>파일을 이곳에 끌어다 놓거나 버튼으로 선택하세요. 첫 줄은 열 이름(예: 학번, 이름, 반, 발표(20), 보고서(30))이어야 합니다.</p>
+      </div>
+      <div class="upload-actions">
+        <label class="btn primary" for="fileInput">파일 선택</label>
+        <input type="file" id="fileInput" accept=".csv,text/csv" hidden>
+        <button type="button" class="btn" id="sampleBtn">샘플 데이터(30명)로 체험</button>
+        <button type="button" class="btn ghost" id="downloadBtn">샘플 CSV 내려받기</button>
+      </div>
+      <p class="message" id="message" role="alert" hidden></p>
+    </section>
+
+    <div id="dashboard" hidden>
+      <section class="toolbar">
+        <div class="file-info">
+          <strong id="fileName"></strong>
+          <span id="fileMeta"></span>
+        </div>
+        <div class="filters">
+          <label>분석 대상
+            <select id="targetSelect"></select>
+          </label>
+          <label id="classFilterWrap">반
+            <select id="classSelect"></select>
+          </label>
+        </div>
+      </section>
+
+      <section class="kpis" id="kpis"></section>
+
+      <section class="grid">
+        <article class="card chart-card">
+          <header class="card-head">
+            <h2>점수 분포</h2>
+            <span class="card-note" id="histNote"></span>
+          </header>
+          <div class="chart-wrap" id="histWrap">
+            <svg id="histogram" role="img" aria-label="점수 분포 히스토그램"></svg>
+            <div class="tooltip" id="tooltip" hidden></div>
+          </div>
+        </article>
+
+        <article class="card" id="itemCard">
+          <header class="card-head">
+            <h2>항목별 평균</h2>
+            <span class="card-note">만점 대비 성취율</span>
+          </header>
+          <div class="items" id="items"></div>
+        </article>
+      </section>
+
+      <section class="card">
+        <header class="card-head">
+          <h2>학생별 점수</h2>
+          <input type="search" id="search" placeholder="이름·학번 검색" aria-label="이름 또는 학번 검색">
+        </header>
+        <div class="table-wrap">
+          <table id="table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>업로드한 파일은 저장되거나 전송되지 않으며, 페이지를 닫으면 사라집니다.</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
